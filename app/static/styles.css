@@ -276,18 +276,26 @@ button:disabled {
   padding: 20px;
 }
 
-.score-label {
+.score-label,
+.score-help {
   margin-bottom: 4px;
   color: #a8b3c7;
   font-weight: 700;
 }
 
 .score-value {
-  margin-bottom: 0;
+  margin-bottom: 8px;
   color: #ffffff;
   font-size: 2rem;
   font-weight: 800;
   line-height: 1;
+}
+
+.score-help {
+  margin-bottom: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 .score-bar {

@@ -20,7 +20,7 @@
             <div class="field">
               <label for="resume-text">Resume Text</label>
               <textarea id="resume-text" name="resume_text" rows="10" placeholder="Paste your resume here..."></textarea>
-              <p class="field-help">Use pasted text, or upload a PDF below.</p>
+              <p class="field-help">Paste your resume text or upload a PDF.</p>
               <label class="file-upload" for="resume-pdf">
                 <span>Upload PDF resume</span>
                 <input id="resume-pdf" name="resume_pdf" type="file" accept="application/pdf">
@@ -31,6 +31,7 @@
             <div class="field">
               <label for="job-description">Job Description</label>
               <textarea id="job-description" name="job_description" rows="10" placeholder="Paste the job description here..."></textarea>
+              <p class="field-help">Paste the full job description for best results.</p>
             </div>
           </div>
 
@@ -38,7 +39,7 @@
             <button id="submit-button" class="primary-button" type="submit">Optimize Resume</button>
             <div id="loading-message" class="loading" hidden>
               <span class="spinner" aria-hidden="true"></span>
-              <span>Optimizing your resume...</span>
+              <span>Analyzing resume and job description...</span>
             </div>
           </div>
         </form>
@@ -60,6 +61,7 @@
           <div>
             <p class="score-label">Match Score</p>
             <p id="match-score" class="score-value">0%</p>
+            <p class="score-help">Based on keyword overlap between your resume and the job description.</p>
           </div>
           <div class="score-bar" aria-hidden="true">
             <div id="match-score-bar" class="score-bar-fill"></div>

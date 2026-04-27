@@ -31,7 +31,7 @@ function setList(element, items) {
 
 function setLoading(isLoading) {
   loadingMessage.hidden = !isLoading;
-  submitButton.textContent = isLoading ? "Optimizing..." : "Optimize Resume";
+  submitButton.textContent = isLoading ? "Analyzing..." : "Optimize Resume";
 
   formControls.forEach((control) => {
     control.disabled = isLoading;
@@ -45,7 +45,7 @@ function showSuccess(message) {
 }
 
 function showError(message) {
-  errorMessage.textContent = message;
+  errorMessage.textContent = getFriendlyMessage(message);
   errorMessage.hidden = false;
   successMessage.hidden = true;
 }
@@ -55,6 +55,32 @@ function clearMessages() {
   errorMessage.hidden = true;
 }
 
+function getFriendlyMessage(value) {
+  if (value instanceof Error) {
+    return value.message || "Something went wrong. Please try again.";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    const messages = value
+      .map((item) => item.msg || item.message)
+      .filter(Boolean);
+
+    return messages.length
+      ? messages.join(" ")
+      : "Please check your inputs and try again.";
+  }
+
+  if (value && typeof value === "object") {
+    return value.message || value.detail || "Something went wrong. Please try again.";
+  }
+
+  return "Something went wrong. Please try again.";
+}
+
 function getErrorMessage(detail) {
   if (typeof detail === "string") {
     return detail;
@@ -62,12 +88,13 @@ function getErrorMessage(detail) {
 
   if (Array.isArray(detail)) {
     return detail
-      .map((item) => item.msg || item.message || JSON.stringify(item))
+      .map((item) => item.msg || item.message)
+      .filter(Boolean)
       .join(" ");
   }
 
   if (detail && typeof detail === "object") {
-    return detail.message || JSON.stringify(detail);
+    return detail.message || detail.detail || "Something went wrong. Please try again.";
   }
 
   return "Something went wrong. Please try again.";
@@ -211,7 +238,7 @@ form.addEventListener("submit", async (event) => {
     showSuccess("Resume optimization complete. Your results are ready below.");
     results.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
-    showError(error.message || "Something went wrong. Please try again.");
+    showError(error);
   } finally {
     setLoading(false);
   }
