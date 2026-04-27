@@ -8,45 +8,74 @@
   </head>
   <body>
     <main class="page">
-      <section class="intro">
-        <h1>AI Resume Optimizer</h1>
-        <p>Paste your resume and a target job description to generate a cleaner, more ATS-friendly version.</p>
+      <section class="app-card">
+        <div class="intro">
+          <p class="eyebrow">Resume matching assistant</p>
+          <h1>AI Resume Optimizer</h1>
+          <p>Paste your resume and a target job description to generate a sharper, more ATS-friendly version.</p>
+        </div>
+
+        <form id="optimizer-form" class="optimizer-form">
+          <div class="field-grid">
+            <div class="field">
+              <label for="resume-text">Resume Text</label>
+              <textarea id="resume-text" name="resume_text" rows="10" placeholder="Paste your resume here..." required></textarea>
+            </div>
+
+            <div class="field">
+              <label for="job-description">Job Description</label>
+              <textarea id="job-description" name="job_description" rows="10" placeholder="Paste the job description here..." required></textarea>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="submit-button" class="primary-button" type="submit">Optimize Resume</button>
+            <div id="loading-message" class="loading" hidden>
+              <span class="spinner" aria-hidden="true"></span>
+              <span>Optimizing your resume...</span>
+            </div>
+          </div>
+        </form>
+
+        <p id="error-message" class="error" hidden></p>
       </section>
 
-      <form id="optimizer-form" class="optimizer-form">
-        <label for="resume-text">Resume Text</label>
-        <textarea id="resume-text" name="resume_text" rows="10" placeholder="Paste your resume here..." required></textarea>
-
-        <label for="job-description">Job Description</label>
-        <textarea id="job-description" name="job_description" rows="10" placeholder="Paste the job description here..." required></textarea>
-
-        <button id="submit-button" type="submit">Optimize Resume</button>
-      </form>
-
-      <p id="loading-message" class="loading" hidden>Optimizing your resume...</p>
-      <p id="error-message" class="error" hidden></p>
-
       <section id="results" class="results" hidden>
-        <h2>Results</h2>
-
-        <div class="result-block">
-          <h3>Professional Summary</h3>
-          <p id="professional-summary"></p>
+        <div class="results-header">
+          <p class="eyebrow">Optimized output</p>
+          <h2>Results</h2>
         </div>
 
-        <div class="result-block">
-          <h3>Improved Bullets</h3>
-          <ul id="improved-bullets"></ul>
+        <div class="result-card">
+          <div class="result-card-header">
+            <h3>Professional Summary</h3>
+            <button class="copy-button" type="button" data-copy-target="professional-summary">Copy</button>
+          </div>
+          <p id="professional-summary" class="copy-source"></p>
         </div>
 
-        <div class="result-block">
-          <h3>Missing Keywords</h3>
-          <ul id="missing-keywords"></ul>
+        <div class="result-card">
+          <div class="result-card-header">
+            <h3>Improved Resume Bullets</h3>
+            <button class="copy-button" type="button" data-copy-target="improved-bullets">Copy</button>
+          </div>
+          <ul id="improved-bullets" class="copy-source"></ul>
         </div>
 
-        <div class="result-block">
-          <h3>ATS Recommendations</h3>
-          <ul id="ats-recommendations"></ul>
+        <div class="result-card">
+          <div class="result-card-header">
+            <h3>Missing Keywords</h3>
+            <button class="copy-button" type="button" data-copy-target="missing-keywords">Copy</button>
+          </div>
+          <ul id="missing-keywords" class="copy-source keyword-list"></ul>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card-header">
+            <h3>ATS Recommendations</h3>
+            <button class="copy-button" type="button" data-copy-target="ats-recommendations">Copy</button>
+          </div>
+          <ul id="ats-recommendations" class="copy-source"></ul>
         </div>
       </section>
     </main>

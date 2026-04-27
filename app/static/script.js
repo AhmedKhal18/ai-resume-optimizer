@@ -8,6 +8,7 @@ const professionalSummary = document.querySelector("#professional-summary");
 const improvedBullets = document.querySelector("#improved-bullets");
 const missingKeywords = document.querySelector("#missing-keywords");
 const atsRecommendations = document.querySelector("#ats-recommendations");
+const copyButtons = document.querySelectorAll("[data-copy-target]");
 
 function setList(element, items) {
   element.innerHTML = "";
@@ -24,6 +25,34 @@ function setLoading(isLoading) {
   submitButton.disabled = isLoading;
   submitButton.textContent = isLoading ? "Optimizing..." : "Optimize Resume";
 }
+
+function getCopyText(element) {
+  if (element.tagName === "UL") {
+    return Array.from(element.querySelectorAll("li"))
+      .map((item) => item.textContent)
+      .join("\n");
+  }
+
+  return element.textContent;
+}
+
+copyButtons.forEach((button) => {
+  button.addEventListener("click", async () => {
+    const target = document.querySelector(`#${button.dataset.copyTarget}`);
+    const text = getCopyText(target).trim();
+
+    if (!text) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(text);
+    button.textContent = "Copied";
+
+    setTimeout(() => {
+      button.textContent = "Copy";
+    }, 1400);
+  });
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
