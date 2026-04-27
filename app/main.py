@@ -33,6 +33,7 @@ COMMON_WORDS = {
     "in",
     "is",
     "it",
+    "looking",
     "of",
     "on",
     "or",
@@ -45,6 +46,7 @@ COMMON_WORDS = {
     "with",
     "you",
     "your",
+    "experience",
 }
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -64,12 +66,9 @@ class OptimizeResumeResponse(BaseModel):
 
 
 def extract_keywords(text: str) -> set[str]:
-    words = re.findall(r"\b[a-zA-Z][a-zA-Z0-9+#.-]*\b", text.lower())
-    return {
-        word
-        for word in words
-        if len(word) > 2 and word not in COMMON_WORDS
-    }
+    normalized = re.sub(r"[^a-z0-9\s]", " ", text.lower())
+    words = normalized.split()
+    return {word for word in words if word not in COMMON_WORDS}
 
 
 def calculate_match_score(resume_text: str, job_description: str) -> int:
@@ -145,6 +144,10 @@ def homepage() -> FileResponse:
 @app.post("/api/optimize-resume", response_model=OptimizeResumeResponse)
 async def optimize_resume(request: Request) -> OptimizeResumeResponse:
     payload = await parse_optimize_request(request)
+    match_score = calculate_match_score(
+        payload.resume_text,
+        payload.job_description,
+    )
 
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -192,10 +195,7 @@ async def optimize_resume(request: Request) -> OptimizeResumeResponse:
 
     try:
         data = json.loads(content)
-        data["match_score"] = calculate_match_score(
-            payload.resume_text,
-            payload.job_description,
-        )
+        data["match_score"] = match_score
         return OptimizeResumeResponse(**data)
     except (json.JSONDecodeError, ValueError) as exc:
         raise HTTPException(status_code=502, detail="OpenAI returned an invalid response.") from exc

@@ -67,9 +67,36 @@ def test_optimize_resume_rejects_large_pdf_upload():
     assert response.json()["detail"] == "PDF file must be 5 MB or smaller."
 
 
+def test_match_score_is_high_for_identical_keywords():
+    score = main.calculate_match_score(
+        "Python FastAPI AWS Docker APIs PostgreSQL",
+        "Looking for Python FastAPI AWS Docker APIs PostgreSQL experience",
+    )
+
+    assert score == 100
+
+
+def test_match_score_is_low_for_unrelated_keywords():
+    score = main.calculate_match_score(
+        "Graphic design branding typography",
+        "Python FastAPI AWS Docker PostgreSQL",
+    )
+
+    assert score == 0
+
+
+def test_match_score_is_medium_for_partial_overlap():
+    score = main.calculate_match_score(
+        "Python FastAPI communication leadership",
+        "Python FastAPI AWS Docker",
+    )
+
+    assert score == 50
+
+
 def test_optimize_resume_uses_mocked_openai(monkeypatch):
     expected = {
-        "match_score": 40,
+        "match_score": 50,
         "professional_summary": "Python developer with API experience.",
         "improved_bullets": ["Built FastAPI services."],
         "missing_keywords": ["CI/CD"],
