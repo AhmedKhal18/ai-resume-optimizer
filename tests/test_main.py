@@ -39,34 +39,6 @@ def test_optimize_resume_rejects_empty_job_description():
     assert response.status_code == 422
 
 
-def test_optimize_resume_rejects_non_pdf_upload():
-    response = client.post(
-        "/api/optimize-resume",
-        data={"job_description": "We need a Python developer."},
-        files={"resume_pdf": ("resume.txt", b"not a pdf", "text/plain")},
-    )
-
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Please upload a valid PDF file."
-
-
-def test_optimize_resume_rejects_large_pdf_upload():
-    response = client.post(
-        "/api/optimize-resume",
-        data={"job_description": "We need a Python developer."},
-        files={
-            "resume_pdf": (
-                "resume.pdf",
-                b"0" * (main.MAX_PDF_SIZE_BYTES + 1),
-                "application/pdf",
-            )
-        },
-    )
-
-    assert response.status_code == 413
-    assert response.json()["detail"] == "PDF file must be 5 MB or smaller."
-
-
 def test_match_score_is_high_for_identical_keywords():
     score = main.calculate_match_score(
         "Python FastAPI AWS Docker APIs PostgreSQL",
@@ -92,6 +64,17 @@ def test_match_score_is_medium_for_partial_overlap():
     )
 
     assert score == 50
+
+
+def test_openapi_shows_optimize_resume_request_body():
+    response = client.get("/openapi.json")
+    operation = response.json()["paths"]["/api/optimize-resume"]["post"]
+
+    assert "requestBody" in operation
+    assert (
+        operation["requestBody"]["content"]["application/json"]["schema"]["$ref"]
+        == "#/components/schemas/ResumeRequest"
+    )
 
 
 def test_optimize_resume_uses_mocked_openai(monkeypatch):

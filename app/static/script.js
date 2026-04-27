@@ -54,6 +54,24 @@ function clearMessages() {
   errorMessage.hidden = true;
 }
 
+function getErrorMessage(detail) {
+  if (typeof detail === "string") {
+    return detail;
+  }
+
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) => item.msg || item.message || JSON.stringify(item))
+      .join(" ");
+  }
+
+  if (detail && typeof detail === "object") {
+    return detail.message || JSON.stringify(detail);
+  }
+
+  return "Something went wrong. Please try again.";
+}
+
 function validateForm() {
   const hasResumeText = resumeText.value.trim().length > 0;
   const hasResumePdf = resumePdf.files.length > 0;
@@ -111,6 +129,8 @@ resumePdf.addEventListener("change", () => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+  clearMessages();
+  results.hidden = true;
 
   const validationError = validateForm();
   if (validationError) {
@@ -120,22 +140,27 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const formData = new FormData(form);
+  const payload = {
+    resume_text: resumeText.value.trim(),
+    job_description: jobDescription.value.trim(),
+  };
 
   setLoading(true);
-  clearMessages();
-  results.hidden = true;
 
   try {
     const response = await fetch("/api/optimize-resume", {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.detail || "Something went wrong.");
+      showError(getErrorMessage(data.detail));
+      return;
     }
 
     const score = Math.max(0, Math.min(100, data.match_score || 0));
@@ -150,7 +175,7 @@ form.addEventListener("submit", async (event) => {
     showSuccess("Resume optimization complete. Your results are ready below.");
     results.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
-    showError(error.message);
+    showError(error.message || "Something went wrong. Please try again.");
   } finally {
     setLoading(false);
   }
