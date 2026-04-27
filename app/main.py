@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from io import BytesIO
 from pathlib import Path
 
@@ -18,6 +19,33 @@ app = FastAPI(title="AI Resume Optimizer")
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 MAX_PDF_SIZE_BYTES = 5 * 1024 * 1024
+COMMON_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "by",
+    "for",
+    "from",
+    "in",
+    "is",
+    "it",
+    "of",
+    "on",
+    "or",
+    "our",
+    "that",
+    "the",
+    "this",
+    "to",
+    "we",
+    "with",
+    "you",
+    "your",
+}
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
@@ -28,10 +56,30 @@ class OptimizeResumeRequest(BaseModel):
 
 
 class OptimizeResumeResponse(BaseModel):
+    match_score: int
     professional_summary: str
     improved_bullets: list[str]
     missing_keywords: list[str]
     ats_recommendations: list[str]
+
+
+def extract_keywords(text: str) -> set[str]:
+    words = re.findall(r"\b[a-zA-Z][a-zA-Z0-9+#.-]*\b", text.lower())
+    return {
+        word
+        for word in words
+        if len(word) > 2 and word not in COMMON_WORDS
+    }
+
+
+def calculate_match_score(resume_text: str, job_description: str) -> int:
+    keywords = extract_keywords(job_description)
+    if not keywords:
+        return 0
+
+    resume_words = extract_keywords(resume_text)
+    matched_keywords = keywords.intersection(resume_words)
+    return round((len(matched_keywords) / len(keywords)) * 100)
 
 
 async def extract_pdf_text(file: UploadFile) -> str:
@@ -144,6 +192,10 @@ async def optimize_resume(request: Request) -> OptimizeResumeResponse:
 
     try:
         data = json.loads(content)
+        data["match_score"] = calculate_match_score(
+            payload.resume_text,
+            payload.job_description,
+        )
         return OptimizeResumeResponse(**data)
     except (json.JSONDecodeError, ValueError) as exc:
         raise HTTPException(status_code=502, detail="OpenAI returned an invalid response.") from exc

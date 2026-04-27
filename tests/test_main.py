@@ -69,6 +69,7 @@ def test_optimize_resume_rejects_large_pdf_upload():
 
 def test_optimize_resume_uses_mocked_openai(monkeypatch):
     expected = {
+        "match_score": 40,
         "professional_summary": "Python developer with API experience.",
         "improved_bullets": ["Built FastAPI services."],
         "missing_keywords": ["CI/CD"],

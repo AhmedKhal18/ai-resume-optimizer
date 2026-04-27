@@ -97,6 +97,7 @@ Response body:
 
 ```json
 {
+  "match_score": 72,
   "professional_summary": "Updated professional summary...",
   "improved_bullets": ["Improved bullet 1", "Improved bullet 2"],
   "missing_keywords": ["keyword 1", "keyword 2"],

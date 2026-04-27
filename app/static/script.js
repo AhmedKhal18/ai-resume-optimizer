@@ -11,6 +11,8 @@ const fileName = document.querySelector("#file-name");
 const formControls = form.querySelectorAll("textarea, input, button");
 
 const professionalSummary = document.querySelector("#professional-summary");
+const matchScore = document.querySelector("#match-score");
+const matchScoreBar = document.querySelector("#match-score-bar");
 const improvedBullets = document.querySelector("#improved-bullets");
 const missingKeywords = document.querySelector("#missing-keywords");
 const atsRecommendations = document.querySelector("#ats-recommendations");
@@ -136,6 +138,9 @@ form.addEventListener("submit", async (event) => {
       throw new Error(data.detail || "Something went wrong.");
     }
 
+    const score = Math.max(0, Math.min(100, data.match_score || 0));
+    matchScore.textContent = `${score}%`;
+    matchScoreBar.style.width = `${score}%`;
     professionalSummary.textContent = data.professional_summary;
     setList(improvedBullets, data.improved_bullets || []);
     setList(missingKeywords, data.missing_keywords || []);
