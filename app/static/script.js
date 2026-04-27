@@ -4,6 +4,7 @@ const loadingMessage = document.querySelector("#loading-message");
 const successMessage = document.querySelector("#success-message");
 const errorMessage = document.querySelector("#error-message");
 const results = document.querySelector("#results");
+const downloadResultsButton = document.querySelector("#download-results");
 const resumeText = document.querySelector("#resume-text");
 const resumePdf = document.querySelector("#resume-pdf");
 const jobDescription = document.querySelector("#job-description");
@@ -104,6 +105,39 @@ function getCopyText(element) {
   return element.textContent;
 }
 
+function buildResultsText() {
+  return [
+    "AI Resume Optimizer Results",
+    "",
+    `Match Score: ${matchScore.textContent}`,
+    "",
+    "Professional Summary",
+    professionalSummary.textContent.trim(),
+    "",
+    "Improved Resume Bullets",
+    getCopyText(improvedBullets),
+    "",
+    "Missing Keywords",
+    getCopyText(missingKeywords),
+    "",
+    "ATS Recommendations",
+    getCopyText(atsRecommendations),
+  ].join("\n");
+}
+
+function downloadResults() {
+  const blob = new Blob([buildResultsText()], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "ai-resume-optimizer-results.txt";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 copyButtons.forEach((button) => {
   button.addEventListener("click", async () => {
     const target = document.querySelector(`#${button.dataset.copyTarget}`);
@@ -121,6 +155,8 @@ copyButtons.forEach((button) => {
     }, 1400);
   });
 });
+
+downloadResultsButton.addEventListener("click", downloadResults);
 
 resumePdf.addEventListener("change", () => {
   const file = resumePdf.files[0];
