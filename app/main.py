@@ -1,8 +1,11 @@
 import json
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
@@ -10,6 +13,10 @@ from pydantic import BaseModel, Field
 load_dotenv()
 
 app = FastAPI(title="AI Resume Optimizer")
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 class OptimizeResumeRequest(BaseModel):
@@ -25,8 +32,8 @@ class OptimizeResumeResponse(BaseModel):
 
 
 @app.get("/")
-def health_check() -> dict[str, str]:
-    return {"status": "ok"}
+def homepage() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
 
 
 @app.post("/api/optimize-resume", response_model=OptimizeResumeResponse)

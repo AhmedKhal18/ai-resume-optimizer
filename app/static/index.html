@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Resume Optimizer</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro">
+        <h1>AI Resume Optimizer</h1>
+        <p>Paste your resume and a target job description to generate a cleaner, more ATS-friendly version.</p>
+      </section>
+
+      <form id="optimizer-form" class="optimizer-form">
+        <label for="resume-text">Resume Text</label>
+        <textarea id="resume-text" name="resume_text" rows="10" placeholder="Paste your resume here..." required></textarea>
+
+        <label for="job-description">Job Description</label>
+        <textarea id="job-description" name="job_description" rows="10" placeholder="Paste the job description here..." required></textarea>
+
+        <button id="submit-button" type="submit">Optimize Resume</button>
+      </form>
+
+      <p id="loading-message" class="loading" hidden>Optimizing your resume...</p>
+      <p id="error-message" class="error" hidden></p>
+
+      <section id="results" class="results" hidden>
+        <h2>Results</h2>
+
+        <div class="result-block">
+          <h3>Professional Summary</h3>
+          <p id="professional-summary"></p>
+        </div>
+
+        <div class="result-block">
+          <h3>Improved Bullets</h3>
+          <ul id="improved-bullets"></ul>
+        </div>
+
+        <div class="result-block">
+          <h3>Missing Keywords</h3>
+          <ul id="missing-keywords"></ul>
+        </div>
+
+        <div class="result-block">
+          <h3>ATS Recommendations</h3>
+          <ul id="ats-recommendations"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>

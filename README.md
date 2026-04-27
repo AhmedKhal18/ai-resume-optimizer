@@ -7,6 +7,10 @@ A simple FastAPI backend that optimizes resume text against a job description us
 ```text
 app/
   main.py
+  static/
+    index.html
+    script.js
+    styles.css
 requirements.txt
 .env.example
 README.md
@@ -51,6 +55,16 @@ The API will run at:
 ```text
 http://127.0.0.1:8000
 ```
+
+## Use the Web UI
+
+Open the homepage in your browser:
+
+```text
+http://127.0.0.1:8000
+```
+
+Paste your resume text and the target job description, then click **Optimize Resume**. The page will call `POST /api/optimize-resume` and display the professional summary, improved bullets, missing keywords, and ATS recommendations.
 
 Interactive API docs are available at:
 
