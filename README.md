@@ -2,6 +2,8 @@
 
 A simple FastAPI backend that optimizes resume text against a job description using the OpenAI API.
 
+Live Demo: https://ai-resume-optimizer-7l53.onrender.com/
+
 ## Project Structure
 
 ```text
