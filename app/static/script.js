@@ -3,6 +3,9 @@ const submitButton = document.querySelector("#submit-button");
 const loadingMessage = document.querySelector("#loading-message");
 const errorMessage = document.querySelector("#error-message");
 const results = document.querySelector("#results");
+const resumeText = document.querySelector("#resume-text");
+const resumePdf = document.querySelector("#resume-pdf");
+const fileName = document.querySelector("#file-name");
 
 const professionalSummary = document.querySelector("#professional-summary");
 const improvedBullets = document.querySelector("#improved-bullets");
@@ -54,14 +57,22 @@ copyButtons.forEach((button) => {
   });
 });
 
+resumePdf.addEventListener("change", () => {
+  const file = resumePdf.files[0];
+  fileName.textContent = file ? file.name : "No PDF selected.";
+});
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(form);
-  const payload = {
-    resume_text: formData.get("resume_text"),
-    job_description: formData.get("job_description"),
-  };
+
+  if (!resumeText.value.trim() && resumePdf.files.length === 0) {
+    errorMessage.textContent = "Paste your resume text or upload a PDF resume.";
+    errorMessage.hidden = false;
+    results.hidden = true;
+    return;
+  }
 
   setLoading(true);
   errorMessage.hidden = true;
@@ -70,10 +81,7 @@ form.addEventListener("submit", async (event) => {
   try {
     const response = await fetch("/api/optimize-resume", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      body: formData,
     });
 
     const data = await response.json();

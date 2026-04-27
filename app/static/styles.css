@@ -93,16 +93,20 @@ label {
   font-weight: 700;
 }
 
-textarea {
+textarea,
+.file-upload {
   width: 100%;
-  min-height: 260px;
-  resize: vertical;
   border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 6px;
-  padding: 14px;
   color: #e8edf8;
   background: #070b14;
   font: inherit;
+}
+
+textarea {
+  min-height: 260px;
+  resize: vertical;
+  padding: 14px;
   line-height: 1.5;
 }
 
@@ -113,6 +117,31 @@ textarea::placeholder {
 textarea:focus {
   border-color: #38d6b8;
   outline: 3px solid rgba(56, 214, 184, 0.16);
+}
+
+.field-help {
+  margin: -2px 0 0;
+  color: #8da0ba;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.file-upload {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.file-upload:hover {
+  border-color: rgba(56, 214, 184, 0.48);
+}
+
+.file-upload input {
+  max-width: 170px;
+  color: #a8b3c7;
 }
 
 .actions {

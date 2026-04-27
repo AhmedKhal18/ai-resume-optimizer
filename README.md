@@ -64,7 +64,9 @@ Open the homepage in your browser:
 http://127.0.0.1:8000
 ```
 
-Paste your resume text and the target job description, then click **Optimize Resume**. The page will call `POST /api/optimize-resume` and display the professional summary, improved bullets, missing keywords, and ATS recommendations.
+Paste your resume text or upload a PDF resume, add the target job description, then click **Optimize Resume**. The page will call `POST /api/optimize-resume` and display the professional summary, improved bullets, missing keywords, and ATS recommendations.
+
+PDF uploads must be valid `.pdf` files and 5 MB or smaller. If text cannot be extracted from the PDF, paste the resume text into the form instead.
 
 Interactive API docs are available at:
 
@@ -82,7 +84,7 @@ pytest
 
 ### POST `/api/optimize-resume`
 
-Request body:
+JSON request body:
 
 ```json
 {
@@ -101,3 +103,5 @@ Response body:
   "ats_recommendations": ["Recommendation 1", "Recommendation 2"]
 }
 ```
+
+The web UI sends `multipart/form-data` so it can include an optional `resume_pdf` file along with `resume_text` and `job_description`.

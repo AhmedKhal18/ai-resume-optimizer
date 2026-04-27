@@ -12,14 +12,20 @@
         <div class="intro">
           <p class="eyebrow">Resume matching assistant</p>
           <h1>AI Resume Optimizer</h1>
-          <p>Paste your resume and a target job description to generate a sharper, more ATS-friendly version.</p>
+          <p>Paste your resume or upload a PDF, then add a target job description to generate a sharper, more ATS-friendly version.</p>
         </div>
 
         <form id="optimizer-form" class="optimizer-form">
           <div class="field-grid">
             <div class="field">
               <label for="resume-text">Resume Text</label>
-              <textarea id="resume-text" name="resume_text" rows="10" placeholder="Paste your resume here..." required></textarea>
+              <textarea id="resume-text" name="resume_text" rows="10" placeholder="Paste your resume here..."></textarea>
+              <p class="field-help">Use pasted text, or upload a PDF below.</p>
+              <label class="file-upload" for="resume-pdf">
+                <span>Upload PDF resume</span>
+                <input id="resume-pdf" name="resume_pdf" type="file" accept="application/pdf">
+              </label>
+              <p id="file-name" class="field-help">No PDF selected.</p>
             </div>
 
             <div class="field">

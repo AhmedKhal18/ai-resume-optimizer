@@ -39,6 +39,34 @@ def test_optimize_resume_rejects_empty_job_description():
     assert response.status_code == 422
 
 
+def test_optimize_resume_rejects_non_pdf_upload():
+    response = client.post(
+        "/api/optimize-resume",
+        data={"job_description": "We need a Python developer."},
+        files={"resume_pdf": ("resume.txt", b"not a pdf", "text/plain")},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Please upload a valid PDF file."
+
+
+def test_optimize_resume_rejects_large_pdf_upload():
+    response = client.post(
+        "/api/optimize-resume",
+        data={"job_description": "We need a Python developer."},
+        files={
+            "resume_pdf": (
+                "resume.pdf",
+                b"0" * (main.MAX_PDF_SIZE_BYTES + 1),
+                "application/pdf",
+            )
+        },
+    )
+
+    assert response.status_code == 413
+    assert response.json()["detail"] == "PDF file must be 5 MB or smaller."
+
+
 def test_optimize_resume_uses_mocked_openai(monkeypatch):
     expected = {
         "professional_summary": "Python developer with API experience.",
