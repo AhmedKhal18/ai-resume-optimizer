@@ -72,6 +72,12 @@ Interactive API docs are available at:
 http://127.0.0.1:8000/docs
 ```
 
+## Run Tests
+
+```powershell
+pytest
+```
+
 ## Endpoint
 
 ### POST `/api/optimize-resume`
