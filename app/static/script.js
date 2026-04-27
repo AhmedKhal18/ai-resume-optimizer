@@ -6,6 +6,7 @@ const errorMessage = document.querySelector("#error-message");
 const results = document.querySelector("#results");
 const resumeText = document.querySelector("#resume-text");
 const resumePdf = document.querySelector("#resume-pdf");
+const jobDescription = document.querySelector("#job-description");
 const fileName = document.querySelector("#file-name");
 const formControls = form.querySelectorAll("textarea, input, button");
 
@@ -51,6 +52,28 @@ function clearMessages() {
   errorMessage.hidden = true;
 }
 
+function validateForm() {
+  const hasResumeText = resumeText.value.trim().length > 0;
+  const hasResumePdf = resumePdf.files.length > 0;
+  const hasJobDescription = jobDescription.value.trim().length > 0;
+
+  if (!hasResumeText && !hasResumePdf) {
+    return {
+      message: "Please paste your resume text or upload a PDF resume.",
+      field: resumeText,
+    };
+  }
+
+  if (!hasJobDescription) {
+    return {
+      message: "Please paste the job description before optimizing your resume.",
+      field: jobDescription,
+    };
+  }
+
+  return null;
+}
+
 function getCopyText(element) {
   if (element.tagName === "UL") {
     return Array.from(element.querySelectorAll("li"))
@@ -87,13 +110,15 @@ resumePdf.addEventListener("change", () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const formData = new FormData(form);
-
-  if (!resumeText.value.trim() && resumePdf.files.length === 0) {
-    showError("Paste your resume text or upload a PDF resume.");
+  const validationError = validateForm();
+  if (validationError) {
+    showError(validationError.message);
     results.hidden = true;
+    validationError.field.focus();
     return;
   }
+
+  const formData = new FormData(form);
 
   setLoading(true);
   clearMessages();
