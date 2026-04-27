@@ -1,1 +1,83 @@
-# ai-resume-optimizer
+# AI Resume Optimizer
+
+A simple FastAPI backend that optimizes resume text against a job description using the OpenAI API.
+
+## Project Structure
+
+```text
+app/
+  main.py
+requirements.txt
+.env.example
+README.md
+```
+
+## Setup
+
+1. Create and activate a virtual environment:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+2. Install dependencies:
+
+```powershell
+pip install -r requirements.txt
+```
+
+3. Create a `.env` file:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+4. Add your OpenAI API key to `.env`:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4o-mini
+```
+
+## Run Locally
+
+```powershell
+uvicorn app.main:app --reload
+```
+
+The API will run at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Interactive API docs are available at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+## Endpoint
+
+### POST `/api/optimize-resume`
+
+Request body:
+
+```json
+{
+  "resume_text": "Paste resume text here...",
+  "job_description": "Paste job description here..."
+}
+```
+
+Response body:
+
+```json
+{
+  "professional_summary": "Updated professional summary...",
+  "improved_bullets": ["Improved bullet 1", "Improved bullet 2"],
+  "missing_keywords": ["keyword 1", "keyword 2"],
+  "ats_recommendations": ["Recommendation 1", "Recommendation 2"]
+}
+```
