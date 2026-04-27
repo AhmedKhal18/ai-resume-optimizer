@@ -177,6 +177,7 @@ button:disabled {
 }
 
 .loading,
+.status,
 .error {
   margin: 0;
   font-weight: 700;
@@ -192,6 +193,27 @@ button:disabled {
 .error {
   margin-top: 18px;
   color: #fca5a5;
+}
+
+.status {
+  margin-top: 18px;
+  border-radius: 6px;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+.success {
+  border: 1px solid rgba(56, 214, 184, 0.28);
+  background: rgba(56, 214, 184, 0.12);
+  color: #a7f3d0;
+}
+
+.error {
+  border: 1px solid rgba(252, 165, 165, 0.25);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: rgba(127, 29, 29, 0.22);
+  line-height: 1.5;
 }
 
 .spinner {

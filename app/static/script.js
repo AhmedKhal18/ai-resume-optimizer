@@ -1,11 +1,13 @@
 const form = document.querySelector("#optimizer-form");
 const submitButton = document.querySelector("#submit-button");
 const loadingMessage = document.querySelector("#loading-message");
+const successMessage = document.querySelector("#success-message");
 const errorMessage = document.querySelector("#error-message");
 const results = document.querySelector("#results");
 const resumeText = document.querySelector("#resume-text");
 const resumePdf = document.querySelector("#resume-pdf");
 const fileName = document.querySelector("#file-name");
+const formControls = form.querySelectorAll("textarea, input, button");
 
 const professionalSummary = document.querySelector("#professional-summary");
 const improvedBullets = document.querySelector("#improved-bullets");
@@ -25,8 +27,28 @@ function setList(element, items) {
 
 function setLoading(isLoading) {
   loadingMessage.hidden = !isLoading;
-  submitButton.disabled = isLoading;
   submitButton.textContent = isLoading ? "Optimizing..." : "Optimize Resume";
+
+  formControls.forEach((control) => {
+    control.disabled = isLoading;
+  });
+}
+
+function showSuccess(message) {
+  successMessage.textContent = message;
+  successMessage.hidden = false;
+  errorMessage.hidden = true;
+}
+
+function showError(message) {
+  errorMessage.textContent = message;
+  errorMessage.hidden = false;
+  successMessage.hidden = true;
+}
+
+function clearMessages() {
+  successMessage.hidden = true;
+  errorMessage.hidden = true;
 }
 
 function getCopyText(element) {
@@ -68,14 +90,13 @@ form.addEventListener("submit", async (event) => {
   const formData = new FormData(form);
 
   if (!resumeText.value.trim() && resumePdf.files.length === 0) {
-    errorMessage.textContent = "Paste your resume text or upload a PDF resume.";
-    errorMessage.hidden = false;
+    showError("Paste your resume text or upload a PDF resume.");
     results.hidden = true;
     return;
   }
 
   setLoading(true);
-  errorMessage.hidden = true;
+  clearMessages();
   results.hidden = true;
 
   try {
@@ -96,9 +117,10 @@ form.addEventListener("submit", async (event) => {
     setList(atsRecommendations, data.ats_recommendations || []);
 
     results.hidden = false;
+    showSuccess("Resume optimization complete. Your results are ready below.");
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
-    errorMessage.textContent = error.message;
-    errorMessage.hidden = false;
+    showError(error.message);
   } finally {
     setLoading(false);
   }
