@@ -13,6 +13,20 @@ def test_homepage_returns_200():
     response = client.get("/")
 
     assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "AI Resume Optimizer" in response.text
+
+
+def test_static_files_are_served():
+    response = client.get("/static/script.js")
+
+    assert response.status_code == 200
+
+
+def test_docs_route_still_works():
+    response = client.get("/docs")
+
+    assert response.status_code == 200
 
 
 def test_optimize_resume_rejects_empty_resume_text():

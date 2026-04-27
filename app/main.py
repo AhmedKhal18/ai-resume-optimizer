@@ -16,6 +16,7 @@ load_dotenv()
 app = FastAPI(title="AI Resume Optimizer")
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
+INDEX_HTML = STATIC_DIR / "index.html"
 COMMON_WORDS = {
     "a",
     "an",
@@ -46,7 +47,7 @@ COMMON_WORDS = {
     "experience",
 }
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
 class ResumeRequest(BaseModel):
@@ -80,7 +81,7 @@ def calculate_match_score(resume_text: str, job_description: str) -> int:
 
 @app.get("/")
 def homepage() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(path=str(INDEX_HTML), media_type="text/html")
 
 
 @app.post("/api/optimize-resume", response_model=OptimizeResumeResponse)
